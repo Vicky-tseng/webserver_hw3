@@ -115,8 +115,21 @@ void pcap_callback(u_char *arg,const struct pcap_pkthdr *header,const u_char *co
 		}
 
 		else{
+			struct tcp *tcp = (struct tcp *)(content + ETHER_HDR_LEN + sizeof(ip));
+
+                        u_short srcport = ntohs(tcp->th_sport);
+                        u_short dstport = ntohs(tcp->th_dport);
+
+			if(num_of==total+no+1){
+                                fprintf(fp,"Other:%d\n",ip->ip_p);
+                                fprintf(fp,"src port: %d dest port: %d \n\n\n", srcport, dstport);
+                                fclose(fp);
+                        }
+			
 			total_other++;
 			printf("other:%d\n",ip->ip_p);
+			printf("src port: %d dest port: %d \n\n\n", srcport, dstport);
+
 
 		}
 		
@@ -125,6 +138,7 @@ void pcap_callback(u_char *arg,const struct pcap_pkthdr *header,const u_char *co
 	else{
 		no++; 
 		printf("No\n");
+		
 	}
 
 	printf("\n\n");
